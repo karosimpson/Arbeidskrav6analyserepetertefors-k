@@ -1,0 +1,9 @@
+---
+title: "Rapport arbeidskrav 6"
+format: html
+Bibliography: referanser/referanser.bib
+
+---
+
+# Introduksjon
+
