@@ -222,7 +222,7 @@ summary(m1_lbm)$coef %>%
 #| echo: false 
 #| warning: false
 #| message: false
-#| include: true
+#| include: false
 
 data %>% 
   group_by(time, sets) %>% 
