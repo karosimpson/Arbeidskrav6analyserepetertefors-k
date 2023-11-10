@@ -168,7 +168,7 @@ Undersøkelser på effekten av ulikt treningsvolum på maksimal styrke og øknin
 
 ## Resultat
 
-Både 1 sett og 3 sett økte muskelstyrken i 1RM kneekstensjon og muskelmasse. Det var ikke observert noen effekt av treningsvolum på utvikling i 1RM kneekstensjon eller fettfri masse etter de 12 ukene av treningsintervensjonen, se figur 1 og figur 2. 
+Både 1 sett og 3 sett økte muskelstyrken i 1RM kneekstensjon og muskelmasse, se figur 1 og 2. Det var ikke observert noen effekt av treningsvolum på utvikling i 1RM kneekstensjon eller fettfri masse etter de 12 ukene av treningsintervensjonen, se table 1 og figur 3. 
 
 ```{r}
 #| echo: false
@@ -250,7 +250,42 @@ data %>%
 
 ```
 
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| fig-height: 2
+#| fig-width: 3
+#| label: "fig-change"
+#| fig-cap: "Gjennomsnittlig forskjeller mellom treningsvolumgruppene. Punktene viser gjennomsnittlig forskjell og stolpene viser konfidensintervallen til gjennomsnittene" 
+
+conf_intervals_lbm <- confint(m1_lbm)
+
+coefs_lbm <- summary(m1_lbm)$coef
+
+coef_summary_lbm <- cbind(coefs_lbm, data.frame(conf_intervals_lbm)[3:6, ]) 
+
+
+coef_summary_lbm %>%
+  mutate(coef = rownames(.)) %>%
+  filter(coef %in% c("setsmultiple", "timepost:setsmultiple")) %>% 
+  mutate(time = gsub("time", "", coef), 
+         time = gsub(":setsmultiple", "", time), 
+         time = if_else(time == "setsmultiple", "pre", time)) %>%
+  mutate(time = factor(time, levels = c("pre", "post"))) %>%
+  ggplot(aes(time, Estimate)) + 
+  geom_hline(yintercept = 0, lty = 2) +
+  geom_errorbar(aes(ymin = X2.5.., ymax = X97.5..), width = 0.1) +
+  geom_point(shape = 24, size = 3, fill = "orange") +
+  theme_classic() + 
+  labs(y = "Gj.snitt gruppevis forskjell\n(kg, 95% CI)",
+       x = "Tidspunkt")  
+
+```
+
+
 # Diskusjon
+
 
 
 
