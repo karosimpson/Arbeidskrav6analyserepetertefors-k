@@ -1,0 +1,255 @@
+---
+title: "Tabell og grafer"
+format: html
+editor_options: 
+  chunk_output_type: console
+---
+
+
+```{r}
+#| label: "Load packages and data"
+#| include: false
+#| warning: false
+#| message: false
+#| echo: false
+#| output: false
+
+library(tidyverse)
+library(exscidata)
+library(lme4)
+library(gt)
+library(emmeans)
+library(pbkrtest)
+library(lmerTest)
+
+
+data("strengthvolume")
+data("dxadata")
+
+data <- dxadata %>%
+  select(participant:include, lean.left_leg, lean.right_leg) %>%
+  pivot_longer(names_to = "leg", 
+               values_to = "lean.mass", 
+               cols = lean.left_leg:lean.right_leg) %>%
+  mutate(leg = if_else(leg == "lean.left_leg", "L", "R"), 
+         sets = if_else(multiple == leg, "multiple", "single")) %>%
+  select(participant, time, sex, include, sets, leg, lean.mass) %>%
+  full_join(strengthvolume) %>% 
+  filter(exercise == "legext",
+         !is.na(load)) %>%
+    group_by(participant) %>% 
+    filter(n() == 12) %>% 
+  ungroup() %>%
+  mutate(time = factor(time, levels = c("pre", "session1", "week2", "week5", "week9", "post")),
+         sets = factor(sets, levels = c("single", "multiple")),
+         timec = as.numeric(case_when(time == "pre" ~ 0,
+                                      time == "session1" ~ 0,
+                                      time == "week2" ~ 2,
+                                      time == "week5" ~ 5,
+                                      time == "week9" ~ 9,
+                                      time == "post" ~ 12)))
+
+```
+
+
+
+
+
+# Karakteristikker deltakere
+
+
+```{r}
+
+#| label: "tbl-kar"
+#| include: false
+#| warning: false
+#| message: false
+#| echo: false
+#| output: false
+#| tbl-cap: "Karakteristikker av deltakerne ved pre-test"
+
+tbl_kar <- dxadata %>% 
+  select(time, age, height, weight, participant, include) %>% 
+  filter(time == "pre",
+         include == "incl") %>% 
+  summarise(N = n(), 
+            Alder = paste(round(mean(age, na.rm = TRUE),2), 
+                        round(sd(age, na.rm = TRUE),2), 
+                        sep = " ± "),
+            Høyde = paste(round(mean(height, na.rm = TRUE),2),
+                        round(sd(height, na.rm = TRUE),2), 
+                        sep = " ± "),
+            Vekt = paste(round(mean(weight, na.rm = TRUE),2), 
+                        round(sd(weight, na.rm = TRUE),2), 
+                        sep = " ± ")) %>% 
+  mutate(N = as.character(N)) %>% 
+  pivot_longer(names_to = "variables",
+               values_to = "values",
+               cols = N:Vekt) %>% 
+  gt() %>% 
+cols_label(variables = "Variabler",
+           values = "Gj.snitt ± SD")
+tbl_kar
+
+
+```
+
+
+
+```{r}
+
+#| echo: false
+#| warning: false
+#| message: false
+#| label: "tbl-mod"
+#| tbl-cap: "Volumavhengig effekt på muskelstyrke og muskelmasse fra LMMs. Koeffisienten av interesse er Tid:Gruppemultiple ettersom den viser til forskjell i stigningstallet for modellen mellom treningsvolumgruppenegruppene. SE viser til standardfeil og DF viser til frihetsgrader"
+
+m1_str <- lmer(load ~ timec * sets + (1|participant), data = data)
+
+tab_str <- summary(m1_str)$coef %>% 
+  data.frame() %>% 
+   mutate(Koeffisienter = c("Intercept", 
+                           "Tid", 
+                           "Gruppemultiple", 
+                           "Tid:Gruppemultiple")) %>%
+  select(Koeffisienter, Estimate, Std..Error, df, t.value, Pr...t..)
+
+data_lmb <- data %>% 
+  filter(time == "pre" | time == "post") %>% 
+  select(participant, time, sets, lean.mass) %>% 
+  mutate(lean.mass = lean.mass / 1000)
+
+m1_lbm <- lmer(lean.mass ~ time * sets + (1|participant), data = data_lmb)
+
+summary(m1_lbm)$coef %>% 
+  data.frame() %>% 
+   mutate(Koeffisienter = c("Intercept", 
+                           "Tid", 
+                           "Gruppemultiple", 
+                           "Tid:Gruppemultiple")) %>%
+  select(Koeffisienter, Estimate, Std..Error, df, t.value, Pr...t..) %>% 
+  full_join(tab_str) %>% 
+  gt() %>% 
+  cols_label(Koeffisienter = md("**Koeffisienter**"),
+             Estimate = md("**Estimat**"),
+             Std..Error = md("**SE**"),
+             df = md("**DF**"),
+             t.value = md("**t.verdi**"),
+             Pr...t.. = md("**p.verdi**")) %>% 
+  fmt_number(columns = Estimate:Pr...t.., decimals = 2) %>% 
+  tab_row_group(label = md("*Fettfri Masse*"), rows = 1:4) %>% 
+  tab_row_group(label = md("*1RM Kneekstensjon*"), rows = 5:8)
+
+```
+
+
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| label: "fig-str"
+#| include: false
+#| fig-cap: "Volumavhengig effekt på muskelstyrke i 1RM kneekstensjon. Punkter viser til gjennomsnitt og stolpene viser til gjennomsnittets standardavvik"
+
+
+data %>% 
+  group_by(time, sets) %>% 
+  summarise(Mean = mean(load, na.rm = T),
+            SD = sd(load, na.rm = T)) %>% 
+  mutate(timec = as.numeric(case_when(time == "pre" ~ 0,
+                                      time == "session1" ~ 0,
+                                      time == "week2" ~ 2,
+                                      time == "week5" ~ 5,
+                                      time == "week9" ~ 9,
+                                      time == "post" ~ 12))) %>% 
+  ggplot(aes(timec, Mean, group = sets, color = sets)) +
+  geom_line(position = position_dodge(width = 0.7)) +
+  geom_point(position = position_dodge(width = 0.7),
+             size = 3) +
+  geom_errorbar(aes(ymin = Mean - SD, ymax = Mean + SD), 
+                position = position_dodge(width =0.7),
+                width = 0.7) +
+  scale_x_continuous(breaks = seq(0, 16, 1)) +
+  scale_y_continuous(breaks = seq(40, 130, 10)) +
+  labs(x = "Tid (uker)",
+       y = "1RM Kneekstensjon (kg)",
+       color = "Treningsvolum") +
+  theme_classic()
+
+```
+
+                          
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| fig-height: 3
+#| fig-width: 6
+#| label: "fig-lbm"
+#| fig-cap: "Volumavhengig effekt på fettfri masse. Linjene viser hver deltakers forandring i fettfri masse fra pre- til posttest, punktene viser gjennomsnitt og stolpene viser gjennomsnittets konfidensintervaller"
+
+
+est_lbm <- emmeans(m1_lbm, specs = ~ time|sets)
+
+est_lbm %>%
+  data.frame() %>%
+  ggplot(aes(time, emmean, group = sets, color = sets) ) +
+  geom_line(data = data_lmb, 
+            aes(time, lean.mass, 
+                group = participant, 
+                color = sets),
+            alpha = 0.4) +
+  geom_errorbar(aes(ymin = lower.CL, ymax = upper.CL), 
+                position = position_dodge(width = 0.2), 
+                width = 0.15,
+                size = 0.4,
+                color = "black") +
+  geom_line(position = position_dodge(width = 0.2)) +
+  geom_point(position = position_dodge(width = 0.2),
+             size = 3) +
+  theme_classic() +
+  labs(y = "Fettfri masse (kg)", 
+       color = "Treningsvolum") +
+   theme(axis.text.x = element_blank(), 
+         axis.title.x = element_blank())
+
+
+```
+
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| fig-height: 2
+#| fig-width: 3
+#| label: "fig-change"
+#| fig-cap: "Gjennomsnittlig forskjeller mellom treningsvolumgruppene. 
+
+conf_intervals_lbm <- confint(m1_lbm)
+
+coefs_lbm <- summary(m1_lbm)$coef
+
+coef_summary_lbm <- cbind(coefs_lbm, data.frame(conf_intervals_lbm)[3:6, ]) 
+
+
+coef_summary_lbm %>%
+  mutate(coef = rownames(.)) %>%
+  filter(coef %in% c("setsmultiple", "timepost:setsmultiple")) %>% 
+  mutate(time = gsub("time", "", coef), 
+         time = gsub(":setsmultiple", "", time), 
+         time = if_else(time == "setsmultiple", "pre", time)) %>%
+  mutate(time = factor(time, levels = c("pre", "post"))) %>%
+  ggplot(aes(time, Estimate)) + 
+  geom_hline(yintercept = 0, lty = 2) +
+  geom_errorbar(aes(ymin = X2.5.., ymax = X97.5..), width = 0.1) +
+  geom_point(shape = 24, size = 3, fill = "orange") +
+  theme_classic() + 
+  labs(y = "Gj.snitt gruppevis forskjell\n(kg, 95% CI)",
+       x = "Tidspunkt") 
+
+
+```
+
+
