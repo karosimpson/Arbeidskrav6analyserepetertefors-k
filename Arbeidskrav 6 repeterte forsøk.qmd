@@ -59,7 +59,7 @@ data <- dxadata %>%
 
 Adaptasjoner til styrketrening varierer fra person til person, og henger sammen med en rekke faktorer, som treningsvolum, intensitet, valg av øvelser, hvile mellom sett, hastighet på utførelsen av øvelsen og hyppigheten på treninga (@ratamess2009). I tillegg spiller genetiske disposisjoner og miljøfaktorer en rolle for variasjoner i tilpasninger (@timmons2011). Styrketrening har en positv effekt på prestasjon i mange idretter som stiller krav til styrke, men også utholdenhetsidrett (@beattie2014; @rønnestad2014). I tillegg har styrketrening en positv effekt sett i et folkehelseperspektiv (@westcott2012). 
 
-For utrente personer som begynner med styrketrening varierer økningen i muskelstyrke med 1 %, målt som én repetisjon maksimum (1RM), med en variasjon på 0,1-0,3% (@mcdonagh1984), samt at tvversnittet til de musklene som trenes økes med 0,1-0,5% per økt (@wernbom2007). Variasjonene i adaptasjonene på styrke- og muskelvekst er sannsynligvis avhengig av hvilken muskelgruppe som trenes, antall serier og repetisjoner, pauselengde, fibertypesammensetning og genetikk (@raastad2010; @tonnessen2018). Det ser ut til at det er et dose-respons forhold mellom treningsmengde og styrkeøkning per tidsenhet (@raastad2010). Treningsmengden bestemmes av antall økter, serier og hyppighet på øktene, i tillegg ser det ut til at hvor mange øvelser vi trener på hver muskelgruppe kan ha betydning. Hvilken treningsmetode som er gunstig for å få best mulig effekt er man uenige om. @carpinelli2002; @carpinelli1998 viser til at èn serie på hver muskelgruppe gir best effekt, mens andre meta-analyser viser at et moderat treningsvolum med tre serier er fordelaktig (@krieger2010). 
+For utrente personer som begynner med styrketrening varierer økningen i muskelstyrke med 1 %, målt som én repetisjon maksimum (1RM), med en variasjon på 0,1-0,3% (@mcdonagh1984), samt at tvversnittet til de musklene som trenes økes med 0,1-0,5% per økt (@wernbom2007). Variasjonene i adaptasjonene på styrke- og muskelvekst er sannsynligvis avhengig av hvilken muskelgruppe som trenes, antall serier og repetisjoner, pauselengde, fibertypesammensetning og genetikk (@raastad2010; @tonnessen2018). Det ser ut til at det er et dose-respons forhold mellom treningsmengde og styrkeøkning per tidsenhet (@raastad2010). Treningsmengden bestemmes av antall økter, serier og hyppighet på øktene, i tillegg ser det ut til at hvor mange øvelser vi trener på hver muskelgruppe kan ha betydning. Hvilken treningsmetode som er gunstig for å få best mulig effekt er man uenige om. @carpinelli2002; @carpinelli1998 viser til at èn serie på hver muskelgruppe gir best effekt, mens andre meta-analyser viser at et moderat treningsvolum med tre serier er fordelaktig (@krieger2010; @radaelli2015; @kelly2007). 
 
 Målet med denne studien var å sammenlikne effekten av singelserie (1 sett) og multiserie (3 sett) treningsprotokoller på muskelstyrke og muskelmasse for utrente personer. 
 
@@ -67,16 +67,18 @@ Målet med denne studien var å sammenlikne effekten av singelserie (1 sett) og 
 
 ## Deltaktere
 
-Det ble rekruttert 41 mannlige og kvinnelige deltaktere til å delta i studien, med ett kriteritum om å være ikke-røykere og mellom 18 og 40 år. Ekslusjonskriterer var intoleranse av lokal bedøvelse, redusert muskelstyrke på grunn av tidligere eller nåværende skader, gjennomført mer enn én styrkeøkt i uka det siste året før intervensjonen og inntak av medisiner som kan påvirke adaptasjoner til styrketrening. I dataanalysene ble syv deltakere ekskludert fordi de ikke fullført 85% av de planlagte treningsøktene av ulike grunner. Alle deltakerne hadde tidligere erfaring med idrettsaktiviteter som for eksempel lagidretter, langrenn og turn. 
+Det ble rekruttert 41 mannlige og kvinnelige deltaktere til å delta i studien, med ett kriteritum om å være ikke-røykere og mellom 18 og 40 år. Ekslusjonskriterer var intoleranse av lokal bedøvelse, redusert muskelstyrke på grunn av tidligere eller nåværende skader, gjennomført mer enn én styrkeøkt i uka det siste året før intervensjonen og inntak av medisiner som kan påvirke adaptasjoner til styrketrening. I dataanalysene ble syv deltakere ekskludert fordi de ikke fullført 85% av de planlagte treningsøktene av ulike grunner. Alle deltakerne hadde tidligere erfaring med idrettsaktiviteter som for eksempel lagidretter, langrenn og turn. Deltakernes karakteristikker vises i Table 1. 
 
 
 ```{r}
 
-#| label: "Karakteristikk forsøkspersoner"
+
 #| echo: false
 #| warning: false
 #| message: false
 #| include: false
+#| label: tbl-kar
+#| tbl-cap: "Karakteristikker"
 
 dxadata %>%
   select(participant:weight, lean.left_leg, lean.right_leg) %>%
@@ -163,62 +165,18 @@ Muskelbiopsi ble tatt bilateralt fra m.vastus lateralis ved lokalbedølvelse. Al
 
 ## Dataanalyse og statistikk
 
-Undersøkelser på effekten av ulikt treningsvolum på maksimal styrke og økning i muskelmasse blir det brukt en mixed linear model (MLL).    
-
+Det ble brukt en tosidig t-test for å se forskjellen mellom gruppene som trente single-sett og multiple-sett. Effekten av ulikt treningsvolum på maksimal styrke, i form av 1RM i kneekstensjon målt i kg, vises i figur 1. Her blir det brukt en mixed linear model (MLL), og grafen blir framstilt som gjennomsnittsverdier med standardavvik.  
 
 ## Resultat
 
-Både 1 sett og 3 sett økte muskelstyrken i 1RM kneekstensjon og muskelmasse, se figur 1 og 2. Det var ikke observert noen effekt av treningsvolum på utvikling i 1RM kneekstensjon eller fettfri masse etter de 12 ukene av treningsintervensjonen, se table 1 og figur 3. 
+Både single-sett og multiple-sett økte muskelstyrken i 1RM kneekstensjon over den 12 uker lange treningsintervensjonen, se figur 1. Figuren viser at det var liten forskjell mellom gruppene i starten av treningsintervensjonen, men forskjellene større etter avsluttet intervensjon. En tosidig t-test en p-verdi på 0.0359. Dette indikerer at det var en signifikant forskjell mellom gruppene i økning i 1RM i kneekstensjon. 
 
-```{r}
-#| echo: false
-#| warning: false
-#| message: false
-#| label: "tbl-mod"
-#| tbl-cap: "Volumavhengig effekt på muskelstyrke og muskelmasse fra LMMs. Koeffisienten av interesse er Tid:Gruppemultiple ettersom den viser til forskjell i stigningstallet for modellen mellom treningsvolumgruppenegruppene. SE viser til standardfeil og DF viser til frihetsgrader"
-
-m1_str <- lmer(load ~ timec * sets + (1|participant), data = data)
-
-tab_str <- summary(m1_str)$coef %>% 
-  data.frame() %>% 
-   mutate(Koeffisienter = c("Intercept", 
-                           "Tid", 
-                           "Gruppemultiple", 
-                           "Tid:Gruppemultiple")) %>%
-  select(Koeffisienter, Estimate, Std..Error, df, t.value, Pr...t..)
-
-data_lmb <- data %>% 
-  filter(time == "pre" | time == "post") %>% 
-  select(participant, time, sets, lean.mass) %>% 
-  mutate(lean.mass = lean.mass / 1000)
-
-m1_lbm <- lmer(lean.mass ~ time * sets + (1|participant), data = data_lmb)
-
-summary(m1_lbm)$coef %>% 
-  data.frame() %>% 
-   mutate(Koeffisienter = c("Intercept", 
-                           "Tid", 
-                           "Gruppemultiple", 
-                           "Tid:Gruppemultiple")) %>%
-  select(Koeffisienter, Estimate, Std..Error, df, t.value, Pr...t..) %>% 
-  full_join(tab_str) %>% 
-  gt() %>% 
-  cols_label(Koeffisienter = md("**Koeffisienter**"),
-             Estimate = md("**Estimat**"),
-             Std..Error = md("**SE**"),
-             df = md("**DF**"),
-             t.value = md("**t.verdi**"),
-             Pr...t.. = md("**p.verdi**")) %>% 
-  fmt_number(columns = Estimate:Pr...t.., decimals = 2) %>% 
-  tab_row_group(label = md("*Fettfri Masse*"), rows = 1:4) %>% 
-  tab_row_group(label = md("*1RM Kneekstensjon*"), rows = 5:8)
-
-```
+I figur 2 kan vi se at de som trente multiple-sett hadde en større økning i fettfri masse, enn de som trente single sett. 
 
 
 ```{r}
 
-#| label: Figur 2 Utvikling 1 RM kjenekstensjon
+#| label: Figur 1: Effekt på muskelstyrke i 1RM i kneekstensjon basert på single- og multiple sett
 #| echo: false 
 #| warning: false
 #| message: false
@@ -250,42 +208,78 @@ data %>%
 
 ```
 
+
 ```{r}
-#| echo: false
-#| warning: false
-#| message: false
-#| fig-height: 2
-#| fig-width: 3
-#| label: "fig-change"
-#| fig-cap: "Gjennomsnittlig forskjeller mellom treningsvolumgruppene. Punktene viser gjennomsnittlig forskjell og stolpene viser konfidensintervallen til gjennomsnittene" 
+#| warning: False
+#| message: False
+#| include: false
 
-conf_intervals_lbm <- confint(m1_lbm)
+# Load data
+datlean <- dxadata %>%
+  select(participant:include, lean.left_leg, lean.right_leg) %>%
+  pivot_longer(names_to = "leg", 
+               values_to = "lean.mass", 
+               cols = lean.left_leg:lean.right_leg) %>%
+  mutate(leg = if_else(leg == "lean.left_leg", "L", "R"), 
+         sets = if_else(multiple == leg, "multiple", "single")) %>%
+  select(participant, time, sex, include, sets, leg, lean.mass) %>%
+        filter(include == "incl") %>%
+        pivot_wider(names_from = "time", 
+                    values_from = "lean.mass") %>%
+        mutate(change = post - pre) %>%
+        select(participant:sets, change) %>%
+        pivot_wider(names_from = sets, values_from = change) %>%
+        
+  print()
 
-coefs_lbm <- summary(m1_lbm)$coef
+### t- test på endringen 
 
-coef_summary_lbm <- cbind(coefs_lbm, data.frame(conf_intervals_lbm)[3:6, ]) 
+t.test(datlean$multiple, datlean$single, paired = TRUE)
 
-
-coef_summary_lbm %>%
-  mutate(coef = rownames(.)) %>%
-  filter(coef %in% c("setsmultiple", "timepost:setsmultiple")) %>% 
-  mutate(time = gsub("time", "", coef), 
-         time = gsub(":setsmultiple", "", time), 
-         time = if_else(time == "setsmultiple", "pre", time)) %>%
-  mutate(time = factor(time, levels = c("pre", "post"))) %>%
-  ggplot(aes(time, Estimate)) + 
-  geom_hline(yintercept = 0, lty = 2) +
-  geom_errorbar(aes(ymin = X2.5.., ymax = X97.5..), width = 0.1) +
-  geom_point(shape = 24, size = 3, fill = "orange") +
-  theme_classic() + 
-  labs(y = "Gj.snitt gruppevis forskjell\n(kg, 95% CI)",
-       x = "Tidspunkt")  
 
 ```
 
 
+```{r}
+#| label: Figur 2 fettfri masse
+#| echo: false 
+#| warning: false
+#| message: false
+#| include: true
+
+data("dxadata")
+
+dxadata %>%
+  select(participant:include, lean.left_leg, lean.right_leg) %>%
+  pivot_longer(names_to = "leg", 
+               values_to = "lean.mass", 
+               cols = lean.left_leg:lean.right_leg) %>%
+  mutate(leg = if_else(leg == "lean.left_leg", "L", "R"), 
+         sets = if_else(multiple == leg, "multiple", "single")) %>%
+  select(participant, time, sex, include, sets, leg, lean.mass) %>%
+  filter(time %in% c("pre", "post")) %>%
+  group_by(time, sets) %>%
+  summarise(m = mean(lean.mass)) %>%
+  mutate(time = factor(time, levels = c("pre", "post"))) %>%
+  ggplot(aes(time, m, color = sets,
+             group = sets)) + geom_line() +
+  labs(x = "Test tidspunkt",
+       y = "Fettfri masse",
+       color = "Set")
+
+
+```
+
+
+
 # Diskusjon
 
+I denne studien fant vi at både de som trente single sett og de som trente multiple-sett fikk en økning i muskelstyrke, målt i kg i 1RM i øvelsen kneekstensjon. Økningen var størst hos de som trente multiple-sett framfor de som trente single-sett (p> 0.05). Dette stemmer overens med tidligere studier som har funnet (@krieger2010; @radaelli2015; @kelly2007). Det kan være verdt å merke seg at disse deltakerne var utrente personer, så det kan se ut til at de får en effekt uansett. Vi kunne også se at den fettfrie massen til deltakerne som trente multiple-sett økte mer enn gruppa som trente single-sett. Det betyr at økningen i muskelvekst har vært størst hos multiple-sett gruppa.  
+
+# Konklusjon
+
+Denne studien viser at både det å trene ett sett og tre sett for utrente personer gir tilsvarende lik økning i muskelstyrke. Det kan være verdt å merke seg at dette er for utrente personer som ikke har trent styrke mer enn én gang i uka det siste året før treningsintervensjonen startet. 
+Likevel ser det ut til at de som trente tre sett hadde en større økning i muskelmasse framfor de som trente ett sett.  
 
 
 
