@@ -169,14 +169,14 @@ Det ble brukt en tosidig t-test for å se forskjellen mellom gruppene som trente
 
 ## Resultat
 
-Både single-sett og multiple-sett økte muskelstyrken i 1RM kneekstensjon over den 12 uker lange treningsintervensjonen, se figur 1. Figuren viser at det var liten forskjell mellom gruppene i starten av treningsintervensjonen, men forskjellene større etter avsluttet intervensjon. En tosidig t-test en p-verdi på 0.0359. Dette indikerer at det var en signifikant forskjell mellom gruppene i økning i 1RM i kneekstensjon. 
+Både single-sett og multiple-sett økte muskelstyrken i 1RM kneekstensjon over den 12 uker lange treningsintervensjonen, se figur 1. Figuren viser at det var liten forskjell mellom gruppene i starten av treningsintervensjonen, men forskjellene større etter avsluttet intervensjon. 
 
-I figur 2 kan vi se at de som trente multiple-sett hadde en større økning i fettfri masse, enn de som trente single sett. 
+I figur 2 kan vi se at de som trente multiple-sett hadde en større økning i fettfri masse, enn de som trente single sett. En tosidig t-test viser en p-verdi på 0.0359. Dette indikerer at det var en signifikant økning i fettfri masse for multiple-sett gruppa sammenliknet med de som trente single-sett. 
 
 
 ```{r}
 
-#| label: Figur 1: Effekt på muskelstyrke i 1RM i kneekstensjon basert på single- og multiple sett
+#| label: Figur 1: Effekt på muskelstyrke i 1RM i kneekstensjon i uke 1, 2, 5, 9 og 12
 #| echo: false 
 #| warning: false
 #| message: false
@@ -206,10 +206,64 @@ data %>%
        color = "Treningsvolum") +
   theme_classic() 
 
+
+```
+
+```{r}
+
+#| echo: false
+#| warning: false
+#| message: false
+#| label: "tbl-mod"
+#| tbl-cap: "Volumavhengig effekt på muskelstyrke og muskelmasse fra LMMs. 
+
+m1_sty <- lmer(load ~ timec * sets + (1|participant), data = data)
+
+tab_sty <- summary(m1_sty)$coef %>% 
+  data.frame() %>% 
+   mutate(Koeffisienter = c("Intercept", 
+                           "Tid", 
+                           "Gruppemultiple", 
+                           "Tid:Gruppemultiple")) %>%
+  select(Koeffisienter, Estimate, Std..Error, df, t.value, Pr...t..)
+
+data_lmb <- data %>% 
+  filter(time == "pre" | time == "post") %>% 
+  select(participant, time, sets, lean.mass) %>% 
+  mutate(lean.mass = lean.mass / 1000)
+
+m1_lbm <- lmer(lean.mass ~ time * sets + (1|participant), data = data_lmb)
+
+summary(m1_lbm)$coef %>% 
+  data.frame() %>% 
+   mutate(Koeffisienter = c("Intercept", 
+                           "Tid", 
+                           "Gruppemultiple", 
+                           "Tid:Gruppemultiple")) %>%
+  select(Koeffisienter, Estimate, Std..Error, df, t.value, Pr...t..) %>% 
+  full_join(tab_sty) %>% 
+  gt() %>% 
+  cols_label(Koeffisienter = md("**Koeffisienter**"),
+             Estimate = md("**Estimat**"),
+             Std..Error = md("**SE**"),
+             df = md("**DF**"),
+             t.value = md("**t.verdi**"),
+             Pr...t.. = md("**p.verdi**")) %>% 
+  fmt_number(columns = Estimate:Pr...t.., decimals = 2) %>% 
+  tab_row_group(label = md("*Fettfri Masse*"), rows = 1:4) %>% 
+  tab_row_group(label = md("*1RM Kneekstensjon*"), rows = 5:8)
+             
+
+
 ```
 
 
+Oversikt over effekten av styrketrening i 1RM i kneekstensjon og fettfri masse. Koeffisienten som er av interesse er Tid: Gruppemultiple, som viser forskjell i stigningstallet mellom treningsvolumgruppene. SE viser til standardfeil og DF viser til frihetsgrader"
+
+
+
 ```{r}
+
 #| warning: False
 #| message: False
 #| include: false
